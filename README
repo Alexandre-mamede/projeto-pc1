@@ -1,1 +1,44 @@
+Projeto: Sistema de Estoque - ALIFB
+
+Integrantes:
+
+* Alexandre Mamede Patrocinio
+* Diego Vieira Fernandes
+* Gabriel Ferreira de Araujo Alvim Souza Bittar
+* Miguel Moura Mendes
+
+Descrição:
+Este projeto implementa um sistema de estoque para o ALIFB, permitindo o cadastro, consulta, atualização, remoção e transferência de produtos entre depósitos.
+
+O sistema possui menus separados para Depósitos e Produtos, além de salvar os dados em arquivo binário para manter as informações cadastradas mesmo após o encerramento do programa.
+
+Compilação:
+Para compilar o programa, execute no terminal:
+
+make all
+
+Execução:
+Após compilar, execute o programa com:
+
+./main
+
+Arquivos principais:
+
+main.c
+Contém a função principal do programa, o menu inicial e as chamadas para os módulos de Depósitos e Produtos.
+
+deposito.c / deposito.h
+Contém as estruturas e funções relacionadas aos depósitos, como cadastrar, consultar, atualizar e remover depósitos.
+
+produtos.c / produtos.h
+Contém as estruturas e funções relacionadas aos produtos, como cadastrar, consultar, atualizar, remover e transferir produtos entre depósitos.
+
+dados.bin
+Arquivo binário usado para armazenar os dados do sistema. Ao iniciar o programa, os dados são carregados desse arquivo, caso ele exista. Ao sair do programa, os dados atuais são salvos nele.
+
+Makefile
+Arquivo responsável por compilar o projeto usando o comando make all.
+
+Observações:
+O programa foi desenvolvido em linguagem C padrão e pensado para ser executado em ambiente Ubuntu/Linux, conforme solicitado no trabalho.
 
