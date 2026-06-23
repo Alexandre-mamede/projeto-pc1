@@ -8,6 +8,7 @@ typedef struct{
     char telefone[12];
     float capacidade_max;       //em metros cúbicos
 }Deposito;
+Deposito depositos[5];
 
 void Cadastrar_Novo_Deposito(Deposito Deposito[],int contador){
     if(contador >= 5){ 
