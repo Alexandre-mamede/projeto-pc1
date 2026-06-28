@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include <string.h>
-#include <time.h>
 #include "struct.h"
 #include "deposito.h"
 #include "produto.h"
