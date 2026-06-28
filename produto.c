@@ -134,7 +134,7 @@ char cadastrar_produto(produto produtos, Deposito depositos){
 	scanf("%s",produtos.nome_produto);
 	
 	
-	printf("===== Digite o numero do tipo do produto ======");
+	printf("===== Digite o numero do tipo do produto ======\n");
 	printf("1- %s\n",categoria[0]);
 	printf("2- %s\n",categoria[1]);	
 	printf("3- %s\n",categoria[2]);
