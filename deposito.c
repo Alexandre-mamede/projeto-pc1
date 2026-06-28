@@ -3,15 +3,6 @@
 #include "struct.h"
 #include "deposito.h"
 
-typedef struct{
-    char nome[51];
-    char cep[9];
-    char endereco[61];
-    char telefone[12];
-    float capacidade_max;       //em metros cúbicos
-}Deposito;
-Deposito depositos[5];
-
 void Cadastrar_Novo_Deposito(Deposito Deposito[],int contador){
     if(contador >= 5){ 
         printf("\nJa possui a quantidade maxima de depositos\n");
