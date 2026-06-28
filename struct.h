@@ -1,3 +1,6 @@
+#ifndef STRUCT_H
+#define STRUCT_H
+
 typedef struct {
    char nome[101];
    char codigo_Barras[13];
@@ -20,3 +23,4 @@ typedef struct {
    produto produtos[100];
    int total_Produtos;
 } Deposito;
+#endif
