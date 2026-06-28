@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <string.h>
+#include "struct.h"
+#include "deposito.h"
 
 typedef struct{
     char nome[51];
