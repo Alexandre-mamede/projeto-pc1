@@ -1,10 +1,32 @@
+#include<string.h>
+#include<stdio.h>
 #include <time.h>
 #include <ctype.h>
-#include <stdio.h>
-#include <string.h>
-#include "struct.h"
-#include "produto.h"
-int deposito_cadastrado = 0;
+
+int deposito_cadastrado = 0; // variavel que precisa estar no programa do gabriel
+typedef struct{
+	char codigo_barras[13];
+	char nome_produto[101];
+	int tipo_produto;
+	int perecivel;
+	char data_fabricacao[11];
+	float volume_unidade;
+	int quantidade_itens;
+	float valor_unitario;
+	char data_validade[11];
+}produto;
+
+typedef struct{
+    char nome[51];
+	char cep[9];
+	char endereco[61];
+	char telefone[12];
+	float capacidade_max;       //em metros cúbicos
+    produto produtos[100];
+}Deposito;
+
+produto produtos;
+Deposito depositos[5];
 
 char categoria[9][50] = {
 	"Eletrônico",
@@ -61,6 +83,7 @@ int validar_cep(const char *cep) {
 
     return fp;
 }
+
 
 int verificar_data(produto prod) {
     int dia_val, mes_val, ano_val;
@@ -175,8 +198,8 @@ char cadastrar_produto(produto produtos, Deposito depositos){
 
 		printf("===== Produto Cadastrado com Sucesso =====");
 	}
-	printf("Informe o CEP onde o produto será armazenado: ");
-	//preciso esperar o desenvolvimento desta parte com o Gabriel
+	printf("Informe o CEP do deposito onde o produto será armazenado: ");
+	
 
 	scanf("%s",&depositos.cep);
 	int teste_cep = validar_cep(depositos.cep);
@@ -387,4 +410,240 @@ int consultar_produto(produto produtos, Deposito depositos){
     }
 
     fclose(fp);
+}
+void remover_produto() {
+    char cep_busca[9];
+    char codigo_busca[13];
+    int deposito_encontrado = 0;
+    int produto_encontrado = 0;
+
+    printf("Digite o CEP do deposito onde o produto se encontra: ");
+    scanf("%s", cep_busca);
+
+    printf("Digite o codigo de barras do produto a ser removido: ");
+    scanf("%s", codigo_busca);
+
+    FILE *fp_original = fopen("dados.bin", "rb"); 
+    if (fp_original == NULL) {
+        printf("Erro ao abrir o arquivo de dados.\n");
+        return;
+    }
+
+    FILE *fp_temp = fopen("temp.bin", "wb");
+    if (fp_temp == NULL) {
+        printf("Erro no arquivo!");
+        fclose(fp_original);
+        return;
+    }
+
+    Deposito dep;
+
+    while (fread(&dep, sizeof(Deposito), 1, fp_original) == 1) {
+        
+        if (strcmp(dep.cep, cep_busca) == 0) {
+            deposito_encontrado = 1;
+            int i, j;
+            
+            for (i = 0; i < 100; i++) {
+
+                if (strlen(dep.produtos[i].codigo_barras) > 0 && 
+                    strcmp(dep.produtos[i].codigo_barras, codigo_busca) == 0) {
+                    
+                    produto_encontrado = 1;
+                    
+                    for (j = i; j < 99; j++) {
+                        dep.produtos[j] = dep.produtos[j + 1];
+                    }
+                    memset(&dep.produtos[99], 0, sizeof(produto));
+                    
+                    break;
+                }
+            }
+        }
+        
+       
+        fwrite(&dep, sizeof(Deposito), 1, fp_temp);
+    }
+
+    fclose(fp_original);
+    fclose(fp_temp);
+
+    
+    if (!deposito_encontrado) {
+        printf("Deposito com o CEP informado nao foi encontrado.\n");
+        remove("temp.bin"); 
+    } else if (!produto_encontrado) {
+        printf("Produto com o codigo de barras informado nao foi encontrado neste deposito.\n");
+        remove("temp.bin"); 
+    } else {
+        
+        remove("depositos.bin");
+        rename("temp.bin", "depositos.bin");
+        printf("Produto removido com sucesso!\n");
+    }
+}
+
+void transferir_produto() {
+    char cep_origem[9], cep_destino[9], codigo_busca[13];
+    int qtd_mover;
+    
+    printf("=== TRANSFERENCIA DE PRODUTO ===\n");
+    printf("Digite o CEP do deposito de ORIGEM: ");
+    scanf("%8s", cep_origem);
+    printf("Digite o codigo de barras do produto: ");
+    scanf("%12s", codigo_busca);
+    printf("Digite a quantidade de itens a ser movida: ");
+    scanf("%d", &qtd_mover);
+    printf("Digite o CEP do deposito de DESTINO: ");
+    scanf("%8s", cep_destino);
+
+    FILE *fp = fopen("depositos.bin", "rb+");
+    if (fp == NULL) {
+        printf("Erro ao abrir o arquivo de depositos.\n");
+        return;
+    }
+
+    Deposito dep;
+    int idx_origem = -1, idx_destino = -1;
+    long pos_origem = -1, pos_destino = -1;
+    int prod_idx_origem = -1;
+
+    long pos_atual = ftell(fp);
+    while (fread(&dep, sizeof(Deposito), 1, fp) == 1) {
+        if (strcmp(dep.cep, cep_origem) == 0) {
+            pos_origem = pos_atual;
+            for (int i = 0; i < 100; i++) {
+                if (strlen(dep.produtos[i].codigo_barras) > 0 && 
+                    strcmp(dep.produtos[i].codigo_barras, codigo_busca) == 0) {
+                    prod_idx_origem = i;
+                    break;
+                }
+            }
+        }
+        if (strcmp(dep.cep, cep_destino) == 0) {
+            pos_destino = pos_atual;
+        }
+        pos_atual = ftell(fp);
+    }
+
+    if (pos_origem == -1) {
+        printf("Erro: Deposito de origem nao encontrado.\n");
+        fclose(fp);
+        return;
+    }
+    if (pos_destino == -1) {
+        printf("Erro: Deposito de destino nao encontrado.\n");
+        fclose(fp);
+        return;
+    }
+
+    fseek(fp, pos_origem, SEEK_SET);
+    Deposito dep_origem;
+    fread(&dep_origem, sizeof(Deposito), 1, fp);
+
+    if (prod_idx_origem == -1 || dep_origem.produtos[prod_idx_origem].quantidade_itens < qtd_mover) {
+        printf("Erro: Produto nao encontrado ou quantidade insuficiente na origem.\n");
+        fclose(fp);
+        return;
+    }
+
+    fseek(fp, pos_destino, SEEK_SET);
+    Deposito dep_destino;
+    fread(&dep_destino, sizeof(Deposito), 1, fp);
+
+    produto prod_transferido = dep_origem.produtos[prod_idx_origem];
+    int sucesso = 0;
+
+    while (!sucesso) {
+        float volume_ocupado_destino = 0;
+        for (int i = 0; i < 100; i++) {
+            if (strlen(dep_destino.produtos[i].codigo_barras) > 0) {
+volume_ocupado_destino += (dep_destino.produtos[i].quantidade_itens * dep_destino.produtos[i].volume_unidade);
+            }
+        }
+
+        float volume_necessario = qtd_mover * prod_transferido.volume_unidade;
+
+        if (volume_ocupado_destino + volume_necessario <= dep_destino.capacidade_max) {
+            sucesso = 1; 
+        } else {
+            int opcao;
+            printf("\n Espaco insuficiente no deposito de destino!\n");
+            printf("1. Alterar quantidade de itens\n");
+            printf("2. Cancelar transferencia\n");
+            printf("Escolha uma opcao: ");
+            scanf("%d", &opcao);
+
+            if (opcao == 1) {
+                printf("Digite a nova quantidade a ser movida: ");
+                
+                scanf("%d", &qtd_mover);
+                if (qtd_mover <= 0) {
+                
+                    printf("Quantidade invalida. Operacao cancelada.\n");
+                    fclose(fp);
+                    return;
+                }
+                if (dep_origem.produtos[prod_idx_origem].quantidade_itens < qtd_mover) {
+                
+                    printf("Erro: Nova quantidade excede o estoque da origem.\n");
+                    fclose(fp);
+                    return;
+                }
+            } else {
+                
+                printf("Transferencia cancelada pelo usuario.\n");
+                fclose(fp);
+                return;
+            }
+        }
+    }
+    dep_origem.produtos[prod_idx_origem].quantidade_itens -= qtd_mover;
+
+    if (dep_origem.produtos[prod_idx_origem].quantidade_itens == 0) {
+        for (int j = prod_idx_origem; j < 99; j++) {
+            dep_origem.produtos[j] = dep_origem.produtos[j + 1];
+        }
+        memset(&dep_origem.produtos[99], 0, sizeof(produto));
+    }
+
+    int prod_idx_destino = -1;
+    for (int i = 0; i < 100; i++) {
+        if (strcmp(dep_destino.produtos[i].codigo_barras, codigo_busca) == 0) {
+            prod_idx_destino = i;
+            break;
+        }
+    }
+
+    if (prod_idx_destino != -1) {
+
+        dep_destino.produtos[prod_idx_destino].quantidade_itens += qtd_mover;
+
+    } else {
+        int espaco_vazio = -1;
+        for (int i = 0; i < 100; i++) {
+            if (strlen(dep_destino.produtos[i].codigo_barras) == 0) {
+                espaco_vazio = i;
+                break;
+            }
+        }
+
+        if (espaco_vazio == -1) {
+            printf("Erro: O deposito de destino nao possui slots livres para novos produtos (Limite de 100 atingido).\n");
+            fclose(fp);
+            return;
+        }
+
+        dep_destino.produtos[espaco_vazio] = prod_transferido;
+        dep_destino.produtos[espaco_vazio].quantidade_itens = qtd_mover; 
+    }
+    
+    fseek(fp, pos_origem, SEEK_SET);
+    fwrite(&dep_origem, sizeof(Deposito), 1, fp);
+
+    fseek(fp, pos_destino, SEEK_SET);
+    fwrite(&dep_destino, sizeof(Deposito), 1, fp);
+
+    fclose(fp);
+    printf("\nTransferencia de %d itens realizada com sucesso!\n", qtd_mover);
 }
