@@ -1,6 +1,6 @@
 typedef struct {
    char nome[101];
-   char codigoBarras[13];
+   char codigo_Barras[13];
    int tipo_produto;
    int perecivel;
    char data_Fabricacao[11];
