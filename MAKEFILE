@@ -1,0 +1,19 @@
+CC = gcc
+CFLAGS = -Wall -Wextra -std=c11
+
+OBJ = main.o deposito.o produto.o
+
+programa: $(OBJ)
+	$(CC) $(OBJ) -o programa
+
+main.o: main.c struct.h deposito.h produto.h
+	$(CC) $(CFLAGS) -c main.c
+
+deposito.o: deposito.c deposito.h struct.h
+	$(CC) $(CFLAGS) -c deposito.c
+
+produto.o: produto.c produto.h struct.h
+	$(CC) $(CFLAGS) -c produto.c
+
+clean:
+	rm -f *.o programa
