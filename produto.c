@@ -1,8 +1,9 @@
-#include<string.h>
-#include<stdio.h>
 #include <time.h>
 #include <ctype.h>
-
+#include <stdio.h>
+#include <string.h>
+#include "struct.h"
+#include "produto.h"
 int deposito_cadastrado = 0;
 typedef struct{
 	char codigo_barras[13];
