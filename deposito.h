@@ -1,7 +1,7 @@
 #ifndef DEPOSITO_H
 #define DEPOSITO_H
 
-"include struct_h"
+"include struct.h"
 
 
 
