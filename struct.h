@@ -22,5 +22,7 @@ typedef struct {
    float estoque_Atual;
    produto produtos[100];
    int total_Produtos;
+   int qtd_produtos;
+   float capacidade_atual; 
 } Deposito;
 #endif
