@@ -1,17 +1,17 @@
 #ifndef STRUCT_H
 #define STRUCT_H
 
-typedef struct {
-   char nome[101];
-   char codigo_Barras[13];
-   int tipo_produto;
-   int perecivel;
-   char data_Fabricacao[11];
-   char data_Validade[11];
-   float volume;
-   int quantidade_itens;
-   float valor_Unitario;
-} produto;
+typedef struct{
+	char codigo_barras[13];
+	char nome_produto[101];
+	int tipo_produto;
+	int perecivel;
+	char data_fabricacao[11];
+	float volume_unidade;
+	int quantidade_itens;
+	float valor_unitario;
+	char data_validade[11];
+}produto;
 
 typedef struct {
    char nome[51];
