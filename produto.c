@@ -23,6 +23,7 @@ typedef struct{
 	char telefone[12];
 	float capacidade_max;       //em metros cúbicos
     produto produtos[100];
+    float capacidade_atual;
 }Deposito;
 
 produto produtos;
@@ -39,9 +40,18 @@ char categoria[9][50] = {
 	"Briquedos e Jogos",
 	"Alimentos e Bebidas"};
 	
+int Deposito_Full(Deposito depositos[], int encontrado, float quantidade_x_volume){
+
+    if(depositos[encontrado].capacidade_atual + quantidade_x_volume >= depositos[encontrado].capacidade_max){
+        printf("\nNao cabe!!!\n");
+        return 0;
+    }else{
+        return 1;
+    }
+
+}
 	
-	int deposito_existe(char cep[])
-{
+	int deposito_existe(char cep_teste[]){
     FILE *fp = abrir_arquivo("depositos.bin","rb");
 
     if(fp == NULL)
@@ -51,7 +61,7 @@ char categoria[9][50] = {
 
     while(fread(&dep,sizeof(Deposito),1,fp))
     {
-        if(strcmp(dep.cep,cep) == 0)
+        if(strcmp(dep.cep,cep_teste) == 0)
         {
             fclose(fp);
             return 1;
@@ -134,7 +144,7 @@ char cadastrar_produto(produto produtos, Deposito depositos){
 	scanf("%s",produtos.nome_produto);
 	
 	
-	printf("===== Digite o numero do tipo do produto ======\n");
+	printf("===== Digite o numero do tipo do produto ======");
 	printf("1- %s\n",categoria[0]);
 	printf("2- %s\n",categoria[1]);	
 	printf("3- %s\n",categoria[2]);
@@ -146,6 +156,7 @@ char cadastrar_produto(produto produtos, Deposito depositos){
 	printf("9- %s\n",categoria[8]);
 	printf("10- %s\n",categoria[9]);
 	scanf("%d",produtos.tipo_produto);
+    getchar();
 
 	if(produtos.tipo_produto > 10 || produtos.tipo_produto <1 ){
 		printf("categoria invalida");
@@ -208,15 +219,22 @@ char cadastrar_produto(produto produtos, Deposito depositos){
 	}else {
 		while(teste_cep != 1){
 			
-			printf("Informe o cep novamente: ");
+			printf("\nCep inválido, informe um novo cep: ");
 			scanf("%s",&depositos.cep);
 			teste_cep = validar_cep(depositos.cep);
 			if(teste_cep == 1){
 				printf("verificando capacidade do deposito: ");
-				if(//deposito vazio 
-			deposito_vazio	){ 
-						//adicionar item no deposito
-					//guardar no deposito;
+				float quantidade_x_volume = produtos.quantidade_itens * produtos.valor_unitario;
+                if((Deposito_Full)==1){ 
+					FILE *fp= fopen("dados.bin","ab");
+                    if(fp== NULL){
+                        return;
+                    }
+                    Deposito dep;
+
+    
+        fwrite(&produtos,sizeof(Deposito),1,fp);//vou arrumar dps
+    
 				} 
 				else { printf("deposito cheio escolha uma das opções abaixo");
 					int n;
@@ -227,9 +245,7 @@ char cadastrar_produto(produto produtos, Deposito depositos){
 					scanf("%d",&n);					
 					switch (n){
 						case 1:
-
 						cadastrar_produto(produtos, depositos);
-
 						break;
 
 						case 2:
@@ -292,11 +308,11 @@ int consultar_produto(produto produtos, Deposito depositos){
     printf("Digite o CEP do deposito: ");
     scanf("%8s", cep_busca);
 
-    if(!deposito_existe(cep_busca))
+    if(deposito_existe(cep_busca) == 0)
     {
         printf("Deposito nao encontrado!\n");
         return;
-    }
+    }else  if(deposito_existe(cep_busca) == 1){ }
 
     printf("Digite o codigo de barras do produto: ");
     scanf("%13s", codigo_busca);
