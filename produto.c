@@ -5,29 +5,6 @@
 #include "struct.h"
 
 int deposito_cadastrado = 0; 
-typedef struct{
-	char codigo_barras[13];
-	char nome_produto[101];
-	int tipo_produto;
-	int perecivel;
-	char data_fabricacao[11];
-	float volume_unidade;
-	int quantidade_itens;
-	float valor_unitario;
-	char data_validade[11];
-}produto;
-
-typedef struct {
-    char nome[51];
-    char cep[10];               
-    char endereco[61];
-    char telefone[12];
-    float capacidade_Maxima;       
-    produto produtos[100];     
-    int qtd_produtos;          
-    float capacidade_atual;     
-} Deposito;
-
 produto produtos;
 Deposito depositos[5];
 
