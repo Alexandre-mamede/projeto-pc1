@@ -5,7 +5,7 @@
 
 void salvar_produto(produto produtos[], int total){
     
-    FILE *fp = fopen("produtos_salvos.txt","w");
+    FILE *fp = fopen("produtos_salvos.txt","ab");
     
     if (fp == NULL) {
         printf("Erro ao abrir o arquivo para salvar.\n");
