@@ -1,14 +1,16 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -std=c11
 
-OBJ = main.o deposito.o produto.o
+TARGET = sistema
 
-all: programa
+OBJ = main.o deposito.o produto.o persistencia.o
 
-programa: $(OBJ)
-	$(CC) $(OBJ) -o programa
+all: $(TARGET)
 
-main.o: main.c struct.h deposito.h produto.h
+$(TARGET): $(OBJ)
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJ)
+
+main.o: main.c deposito.h produto.h persistencia.h struct.h
 	$(CC) $(CFLAGS) -c main.c
 
 deposito.o: deposito.c deposito.h struct.h
@@ -17,7 +19,11 @@ deposito.o: deposito.c deposito.h struct.h
 produto.o: produto.c produto.h struct.h
 	$(CC) $(CFLAGS) -c produto.c
 
-clean:
-	rm -f *.o programa
+persistencia.o: persistencia.c persistencia.h struct.h
+	$(CC) $(CFLAGS) -c persistencia.c
 
-.PHONY: all clean
+clean:
+	rm -f *.o $(TARGET)
+
+run: $(TARGET)
+	./$(TARGET)
