@@ -7,7 +7,6 @@
 int main()
 {
     Deposito depositos[5];
-
     int totalDepositos = carregarDados(depositos);
 
     int opcao;
@@ -21,13 +20,12 @@ int main()
         printf("2 - Produto\n");
         printf("3 - Salvar e Sair\n");
         printf("Opcao: ");
-        scanf("%d",&opcao);
+        scanf("%d", &opcao);
 
         switch(opcao)
         {
 
         case 1:
-
             do
             {
                 printf("\n===== MENU DEPOSITO =====\n");
@@ -37,38 +35,35 @@ int main()
                 printf("4 - Atualizar\n");
                 printf("5 - Remover\n");
                 printf("6 - Voltar\n");
-                scanf("%d",&opDeposito);
+                scanf("%d", &opDeposito);
 
                 switch(opDeposito)
                 {
-
                 case 1:
-                    Cadastrar_Novo_Deposito(depositos,&totalDepositos);
+                    Cadastrar_Novo_Deposito(depositos, &totalDepositos);
                     break;
 
                 case 2:
-                    Consultar_Inf_Depositos(depositos,totalDepositos);
+                    Consultar_Inf_Depositos(depositos, totalDepositos);
                     break;
 
                 case 3:
-                    Consultar_Todas_Inf_Depositos(depositos,totalDepositos);
+                    Consultar_Todas_Inf_Depositos(depositos, totalDepositos);
                     break;
 
                 case 4:
-                    Atualizar_Dados_Deposito(depositos,totalDepositos);
+                    Atualizar_Dados_Deposito(depositos, totalDepositos);
                     break;
 
                 case 5:
-                    Remover_Deposito(depositos,&totalDepositos);
+                    Remover_Deposito(depositos, &totalDepositos);
                     break;
                 }
 
-            }while(opDeposito != 6);
-
+            } while(opDeposito != 6);
             break;
 
         case 2:
-
             do
             {
                 printf("\n===== MENU PRODUTO =====\n");
@@ -78,50 +73,45 @@ int main()
                 printf("4 - Remover\n");
                 printf("5 - Transferir\n");
                 printf("6 - Voltar\n");
-                scanf("%d",&opProduto);
+                scanf("%d", &opProduto);
 
                 switch(opProduto)
                 {
-
                 case 1:
-                   cadastrar_produto(produtos,depositos[0]);
+                    cadastrar_produto(depositos, totalDepositos);
                     break;
 
                 case 2:
-                    consultar_produto(produtos);
+                    consultar_produto(depositos, totalDepositos);
                     break;
 
                 case 3:
-                    atualiza_produto(deposito.cep,);
+                    atualiza_produto(depositos, totalDepositos);
                     break;
 
                 case 4:
-                    remover_produto(produtos);
+                    remover_produto(depositos, totalDepositos);
                     break;
 
                 case 5:
-                    transferir_produto(produtos);
+                    transferir_produto(depositos, totalDepositos);
                     break;
                 }
 
-            }while(opProduto != 6);
-
+            } while(opProduto != 6);
             break;
 
         case 3:
-
-            salvarDados(depositos,totalDepositos);
-
+            salvarDados(depositos, totalDepositos);
             printf("\nDados salvos com sucesso!\n");
             printf("Encerrando...\n");
             break;
 
         default:
             printf("\nOpcao invalida!\n");
-
         }
 
-    }while(opcao != 3);
+    } while(opcao != 3);
 
     return 0;
 }
