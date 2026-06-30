@@ -92,7 +92,7 @@ int main()
                     break;
 
                 case 3:
-                    atualiza_produto(produtos);
+                    atualiza_produto(deposito.cep,);
                     break;
 
                 case 4:
