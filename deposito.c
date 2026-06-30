@@ -205,7 +205,7 @@ void Atualizar_Dados_Deposito(Deposito depositos[],int contador){  //completa
                     char temp_nome[51];
                     
                     printf("\nDigite o novo nome: ");
-                    scanf("%50[^\n]s",temp_nome);
+                    scanf("%50[^\n]",temp_nome);
                     while ((c = getchar()) != '\n' && c != EOF);
                     
                     strcpy(depositos[encontrado].nome,temp_nome);
