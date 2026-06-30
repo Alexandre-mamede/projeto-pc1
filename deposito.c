@@ -273,7 +273,7 @@ void Atualizar_Dados_Deposito(Deposito depositos[],int contador){  //completa
                     if(depositos[encontrado].capacidade_atual > temp_capacidade_Max){
                         printf("\nTamanho invalido\n");
                     }else{
-                        depositos[encontrado].capacidade_Maxima = temp_capacidade_max;
+                        depositos[encontrado].capacidade_Maxima = temp_capacidade_Max;
                     }
                     break;
 
