@@ -59,7 +59,7 @@ void Cadastrar_Novo_Deposito(Deposito depositos[],int *contador){ //completa
     }while((c = getchar()) != '\n' && c != EOF);
 
     printf("\nDigite a capacidade máxima em metros cubicos: ");
-    if(scanf("%f", &depositos[*contador].capacidade_max) != 1){
+    if(scanf("%f", &depositos[*contador].capacidade_Maxima) != 1){
         printf("\nValor invalido\n");
         while((c = getchar()) != '\n' && c != EOF);
         return;
@@ -108,7 +108,7 @@ void Consultar_Inf_Depositos(Deposito depositos[],int contador){  //completa
 
         printf("\nTelefone: %s",depositos[encontrado].telefone);
 
-        printf("\nQuantidade: %.2f / %.2f m3",depositos[encontrado].capacidade_atual,depositos[encontrado].capacidade_max);
+        printf("\nQuantidade: %.2f / %.2f m3",depositos[encontrado].capacidade_atual,depositos[encontrado].capacidade_Maxima);
        
         printf("\nProdutos do deposito:\n");
 
@@ -143,7 +143,7 @@ void Consultar_Todas_Inf_Depositos(Deposito depositos[],int contador){  //comple
 
         printf("\nTelefone: %s",depositos[i].telefone);
 
-        printf("\nCapacidade: %.2f / %.2f m3\n",depositos[i].capacidade_atual,depositos[i].capacidade_max);
+        printf("\nCapacidade: %.2f / %.2f m3\n",depositos[i].capacidade_atual,depositos[i].capacidade_Maxima);
 
         printf("\nProdutos do deposito:\n");
 
@@ -265,15 +265,15 @@ void Atualizar_Dados_Deposito(Deposito depositos[],int contador){  //completa
                     break;
 
                 case 5:
-                    float temp_capacidade_max;
+                    float temp_capacidade_Max;
 
                     printf("\nDigite a nova capacidade máxima: ");
-                    scanf("%f", &temp_capacidade_max);
+                    scanf("%f", &temp_capacidade_Max);
                     while ((c = getchar()) != '\n' && c != EOF);        
-                    if(depositos[encontrado].capacidade_atual > temp_capacidade_max){
+                    if(depositos[encontrado].capacidade_atual > temp_capacidade_Max){
                         printf("\nTamanho invalido\n");
                     }else{
-                        depositos[encontrado].capacidade_max = temp_capacidade_max;
+                        depositos[encontrado].capacidade_Maxima = temp_capacidade_max;
                     }
                     break;
 
