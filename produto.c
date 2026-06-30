@@ -5,6 +5,17 @@
 #include "struct.h"
 
 int deposito_cadastrado = 0; 
+FILE *abrir_arquivo(const char *nomeArquivo, const char *modo){
+FILE *fp = fopen(nomeArquivo, modo);
+
+if(fp == NULL)
+{
+   printf("Erro ao abrir o arquivo %s\n", nomeArquivo);
+   return NULL;
+}
+
+return fp;
+}
 produto produtos;
 Deposito depositos[5];
 
@@ -53,26 +64,20 @@ int Deposito_Full(Deposito depositos[], int encontrado, float quantidade_x_volum
     fclose(fp);
     return 0;
 }
+#include <stdio.h>
+#include <string.h>
 
-int validar_cep(const char *cep) {
+
+
+	
+
+int VALIDAR_cep(const char *cep) {
     if (strlen(cep) != 8) return 0;
     
     for (int i = 0; cep[i] != '\0'; i++) {
         if (!isdigit(cep[i])) return 0;
     }
     return 1;
-}
- 	FILE *abrir_arquivo(const char *nomeArquivo, const char *modo)
-{
-    FILE *fp = fopen(nomeArquivo, modo);
-
-    if(fp == NULL)
-    {
-        printf("Erro ao abrir o arquivo %s\n", nomeArquivo);
-        return NULL;
-    }
-
-    return fp;
 }
 
 
@@ -151,7 +156,7 @@ int alocar_produto_no_deposito_por_indice(produto novo_produto, const char *cep_
     float volume = novo_produto.volume_unidade *
                    novo_produto.quantidade_itens;
 
-    if (de.capacidade_atual + volume > dep.capacidade_Maxima) {
+    if (dep.capacidade_atual + volume > dep.capacidade_Maxima) {
         printf("Erro: O deposito nao possui capacidade suficiente.\n");
         fclose(fp);
         return -1;
@@ -196,25 +201,27 @@ int validar_codigo(char codigo[])
     return 1;
 }
 
-char cadastrar_produto(produto produtos, Deposito depositos){
+char cadastrar_produto(produto *produtos, Deposito depositos)
+{
     if(deposito_cadastrado == 0){
         printf("Nenhum deposito cadastrado no sistema!\n");
         return 0;
     }
+
     do
-{
-    printf("Digite o codigo de barras do produto (12 digitos): ");
-    scanf("%12s", produtos.codigo_barras);
-
-    if(!validar_codigo(produtos.codigo_barras))
     {
-        printf("Codigo de barras invalido!\n");
-    }
+        printf("Digite o codigo de barras do produto (12 digitos): ");
+        scanf("%12s", produtos->codigo_barras);
 
-} while(!validar_codigo(produtos.codigo_barras));
+        if(!validar_codigo(produtos->codigo_barras))
+        {
+            printf("Codigo de barras invalido!\n");
+        }
+
+    } while(!validar_codigo(produtos->codigo_barras));
     
     printf("Digite o nome do produto: ");
-    scanf(" %[^\n]", produtos.nome_produto); 
+    scanf(" %[^\n]", produtos->nome_produto); 
     
     printf("===== Digite o numero do tipo do produto ======\n");
     printf("1- %s\n", categoria[0]);
@@ -227,44 +234,48 @@ char cadastrar_produto(produto produtos, Deposito depositos){
     printf("8- %s\n", categoria[7]);
     printf("9- %s\n", categoria[8]);
     printf("10- %s\n", categoria[9]);
-    scanf("%d", &produtos.tipo_produto);
 
-    if(produtos.tipo_produto > 10 || produtos.tipo_produto < 1){
+    scanf("%d", &produtos->tipo_produto);
+
+    if(produtos->tipo_produto > 10 || produtos->tipo_produto < 1){
         printf("categoria invalida\n");
         return -1;
     }
-    if(produtos.tipo_produto == 10){
-        produtos.perecivel = 1;
-    }else {
-        produtos.perecivel = 0;
+
+    if(produtos->tipo_produto == 10){
+        produtos->perecivel = 1;
+    } else {
+        produtos->perecivel = 0;
     }
 
-    if(produtos.perecivel == 1){
+    if(produtos->perecivel == 1){
         printf("Digite a data de fabricação: ");
-        scanf("%s", produtos.data_fabricacao);
+        scanf("%s", produtos->data_fabricacao);
         
         printf("\nDigite a data de vencimento do produto: ");
-        scanf("%s", produtos.data_validade);
+        scanf("%s", produtos->data_validade);
     
-        int status = verificar_data(produtos);
+        int status = verificar_data(*produtos);
         if(status == 1){
             printf("Cadastro inválido. Produto vencido!\n");
             return -1;
         }
-    }else if(produtos.perecivel == 0){
+    }
+    else {
         printf("Digite a data de fabricação: ");
-        scanf("%s", produtos.data_fabricacao);
-        strcpy(produtos.data_validade, "N/A"); 
+        scanf("%s", produtos->data_fabricacao);
+
+        strcpy(produtos->data_validade, "N/A"); 
     }
 
     printf("\nDigite o volume da unidade: ");
-    scanf("%f", &produtos.volume_unidade);
+    scanf("%f", &produtos->volume_unidade);
     
     printf("\nDigite a quantidade de itens do produto: ");
-    scanf("%d", &produtos.quantidade_itens);
+    scanf("%d", &produtos->quantidade_itens);
     
     printf("\nDigite o valor do produto: ");
-    scanf("%f", &produtos.valor_unitario);
+    scanf("%f", &produtos->valor_unitario);
 
     char cep_busca[10];
     int teste_cep = 0;
@@ -273,18 +284,18 @@ char cadastrar_produto(produto produtos, Deposito depositos){
         printf("\nInforme o CEP do deposito onde o produto será armazenado: ");
         scanf("%s", cep_busca); 
         
-        teste_cep = validar_cep(cep_busca);
+        teste_cep = VALIDAR_cep(cep_busca);
         if (teste_cep != 1) {
             printf("Cep inválido! Digite no formato correto.\n");
             continue;
         }
 
-
-        int status_alocacao = alocar_produto_no_deposito_por_indice(produtos, cep_busca);
+        int status_alocacao = alocar_produto_no_deposito_por_indice(*produtos, cep_busca);
 
         if (status_alocacao == 1) {
             printf("\n===== Produto Cadastrado com Sucesso =====\n");
-            return 1;         } 
+            return 1;
+        } 
         else if (status_alocacao == -1) {
             printf("\nDeposito cheio! Escolha uma das opções abaixo:\n");
             int n;
@@ -295,14 +306,13 @@ char cadastrar_produto(produto produtos, Deposito depositos){
 
             if (n == 2) {
                 printf("Digite a nova quantidade de itens do produto: ");
-                scanf("%d", &produtos.quantidade_itens);
+                scanf("%d", &produtos->quantidade_itens);
             } 
             else if (n == 3) {
                 return 0; 
             }
         } 
         else {
-            
             printf("Esse deposito nao existe no sistema. Tente outro CEP.\n");
         }
 
