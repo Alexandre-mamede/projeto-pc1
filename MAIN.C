@@ -2,6 +2,7 @@
 #include "struct.h"
 #include "deposito.h"
 #include "produto.h"
+#include "persistencia.h"
 
 void salvar_produto(produto produtos[], int total) {
 
@@ -36,6 +37,7 @@ void carregar_produto(produto produtos[], int *total) {
 int main() {
 
     produto produtos[100];
+  
 
     int totalProdutos = 0;
     int totalDepositos = 0;
