@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include "struct.h"
 
 #define MAX_PRODUTOS 100
 #define MAX_DEPOSITOS 5
