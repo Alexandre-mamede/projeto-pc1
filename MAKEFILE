@@ -3,6 +3,8 @@ CFLAGS = -Wall -Wextra -std=c11
 
 OBJ = main.o deposito.o produto.o
 
+all: programa
+
 programa: $(OBJ)
 	$(CC) $(OBJ) -o programa
 
@@ -17,3 +19,5 @@ produto.o: produto.c produto.h struct.h
 
 clean:
 	rm -f *.o programa
+
+.PHONY: all clean
