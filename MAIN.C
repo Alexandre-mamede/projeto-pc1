@@ -84,23 +84,23 @@ int main()
                 {
 
                 case 1:
-                   Cadastrar_Novo_Produto(produtos,depositos[0]);
+                   cadastrar_produto(produtos,depositos[0]);
                     break;
 
                 case 2:
-                    consultar_produto();
+                    consultar_produto(produtos);
                     break;
 
                 case 3:
-                    atualiza_produto();
+                    atualiza_produto(produtos);
                     break;
 
                 case 4:
-                    remover_produto();
+                    remover_produto(produtos);
                     break;
 
                 case 5:
-                    transferir_produto();
+                    transferir_produto(produtos);
                     break;
                 }
 
