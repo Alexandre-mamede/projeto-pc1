@@ -53,12 +53,6 @@ int Deposito_Full(Deposito depositos[], int encontrado, float quantidade_x_volum
     fclose(fp);
     return 0;
 }
-#include <stdio.h>
-#include <string.h>
-
-
-
-	
 
 int validar_cep(const char *cep) {
     if (strlen(cep) != 8) return 0;
@@ -157,7 +151,7 @@ int alocar_produto_no_deposito_por_indice(produto novo_produto, const char *cep_
     float volume = novo_produto.volume_unidade *
                    novo_produto.quantidade_itens;
 
-    if (dep.capacidade_atual + volume > dep.capacidade_Maxima) {
+    if (de.capacidade_atual + volume > dep.capacidade_Maxima) {
         printf("Erro: O deposito nao possui capacidade suficiente.\n");
         fclose(fp);
         return -1;
