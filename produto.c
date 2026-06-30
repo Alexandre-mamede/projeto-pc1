@@ -4,10 +4,6 @@
 #include <time.h>
 #include "struct.h"
 
-#define MAX_DEP 5
-
-Deposito depositos[MAX_DEP];
-int total_depositos = 0;
 
 // ===================== VALIDAÇÕES =====================
 
