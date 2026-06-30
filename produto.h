@@ -1,17 +1,24 @@
 #ifndef PRODUTO_H
 #define PRODUTO_H
 
-char cadastrar_produto(produto *p, struct Deposito depositos);
+#include "struct.h"
 
-int consultar_produto(void);
-void atualiza_produto(void);
-void remover_produto(void);
-void transferir_produto(void);
+// ===================== PRODUTO =====================
+
+int cadastrar_produto(produto *p, int deposito_cadastrado, Deposito depositos[]);
+
+int consultar_produto(Deposito depositos[], char codigo[], int total_depositos);
+
+int atualiza_produto(char cep[], char codigo[], Deposito depositos[], int total_depositos);
+
+int remover_produto(char cep[], char codigo[], Deposito depositos[], int total_depositos);
+
+// ===================== UTIL =====================
 
 int validar_codigo(char codigo[]);
-int VALIDAR_cep(const char *cep);
+int validar_cep(const char *cep);
 int verificar_data(produto prod);
 
-int alocar_produto_no_deposito_por_indice(produto novo_produto, const char *cep_busca);
+int alocar_produto_no_deposito(produto novo, const char *cep, Deposito depositos[], int total_depositos);
 
 #endif
