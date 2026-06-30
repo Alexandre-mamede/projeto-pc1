@@ -84,7 +84,7 @@ int main()
                 {
 
                 case 1:
-                    cadastrar_produto(produtos,depositos[0]);
+                   Cadastrar_Novo_Produto(produtos,depositos[0]);
                     break;
 
                 case 2:
