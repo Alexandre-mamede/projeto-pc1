@@ -3,124 +3,138 @@
 #include "deposito.h"
 #include "produto.h"
 
-void salvar_produto(produto produtos[], int total){
-    
-    FILE *fp = fopen("produtos_salvos.txt","ab");
-    
+void salvar_produto(produto produtos[], int total) {
+
+    FILE *fp = fopen("dados.bin", "wb");
+
     if (fp == NULL) {
-        printf("Erro ao abrir o arquivo para salvar.\n");
-    return;
+        printf("Erro ao abrir o arquivo.\n");
+        return;
     }
-    
-    for(int i = 0; i < total; i++){
-       fprintf(fp,"%s;%d;%.2f\n",
-        produtos[i].nome,
-        produtos[i].quantidade_itens,
-        produtos[i].valor_unitario);
-    }
-    
+
+    fwrite(produtos, sizeof(produto), total, fp);
+
     fclose(fp);
-    printf("Arquivo salvo com sucesso!!!\n");
+
+    printf("Produtos salvos com sucesso!\n");
 }
 
-int main(){
+void carregar_produto(produto produtos[], int *total) {
 
-produto produtos[100];
-int total = 0;
-int opcao;
+    FILE *fp = fopen("dados.bin", "rb");
 
-    printf("\n=== MENU ===\n\n");
-    printf("1. Deposito\n");
-    printf("2. Produtos\n");
-    printf("3. salvar e sair\n");
-    scanf("%d",&opcao);
-    
-    switch (opcao){
-        
-       case 1:
+    if (fp == NULL) {
+        *total = 0;
+        return;
+    }
 
+    *total = fread(produtos, sizeof(produto), 100, fp);
+
+    fclose(fp);
+}
+
+int main() {
+
+    produto produtos[100];
+
+    int totalProdutos = 0;
+    int totalDepositos = 0;
+
+    int opcao;
     int opDeposito;
-
-    do{
-
-        printf("\n=== MENU DEPOSITO ===\n");
-        printf("1-Cadastrar\n");
-        printf("2-Consultar\n");
-        printf("3-Consultar todos\n");
-        printf("4-Atualizar\n");
-        printf("5-Voltar\n");
-
-        scanf("%d",&opDeposito);
-
-        switch(opDeposito){
-
-            case 1:
-
-                totalDepositos++;
-                Cadastrar_Novo_Deposito(depositos,totalDepositos);
-                break;
-
-            case 2:
-
-                Consultar_Inf_Depositos(depositos,totalDepositos);
-                break;
-
-            case 3:
-
-                Consultar_Todas_Inf_Depositos(depositos,totalDepositos);
-                break;
-
-            case 4:
-
-                Atualizar_Dados_Deposito(depositos,totalDepositos);
-                break;
-
-        }
-
-    }while(opDeposito!=5);
-
-    break;
-       case 2:
-
     int opProduto;
 
-    do{
+    carregar_produto(produtos, &totalProdutos);
 
-        printf("\n=== MENU PRODUTO ===\n");
-        printf("1-Cadastrar\n");
-        printf("2-Consultar\n");
-        printf("3-Atualizar\n");
-        printf("4-Voltar\n");
+    do {
 
-        scanf("%d",&opProduto);
+        printf("\n=== MENU ===\n");
+        printf("1. Deposito\n");
+        printf("2. Produtos\n");
+        printf("3. Salvar e Sair\n");
+        printf("Opcao: ");
+        scanf("%d", &opcao);
 
-        switch(opProduto){
+        switch (opcao) {
 
-            case 1:
+        case 1:
 
-                cadastrar_produto(produtos[totalProdutos],depositos[0]);
-                totalProdutos++;
-                break;
+            do {
 
-            case 2:
+                printf("\n=== MENU DEPOSITO ===\n");
+                printf("1 - Cadastrar\n");
+                printf("2 - Consultar\n");
+                printf("3 - Consultar Todos\n");
+                printf("4 - Atualizar\n");
+                printf("5 - Voltar\n");
+                scanf("%d", &opDeposito);
 
-                consultar_produto(produtos[0],depositos[0]);
-                break;
+                switch (opDeposito) {
 
-            case 3:
+                case 1:
+                    totalDepositos++;
+                    Cadastrar_Novo_Deposito(depositos, totalDepositos);
+                    break;
 
-                atualiza_produto();
-                break;
+                case 2:
+                    Consultar_Inf_Depositos(depositos, totalDepositos);
+                    break;
 
+                case 3:
+                    Consultar_Todas_Inf_Depositos(depositos, totalDepositos);
+                    break;
+
+                case 4:
+                    Atualizar_Dados_Deposito(depositos, totalDepositos);
+                    break;
+                }
+
+            } while (opDeposito != 5);
+
+            break;
+
+        case 2:
+
+            do {
+
+                printf("\n=== MENU PRODUTO ===\n");
+                printf("1 - Cadastrar\n");
+                printf("2 - Consultar\n");
+                printf("3 - Atualizar\n");
+                printf("4 - Voltar\n");
+                scanf("%d", &opProduto);
+
+                switch (opProduto) {
+
+                case 1:
+                    cadastrar_produto(&produtos[totalProdutos], &depositos[0]);
+                    totalProdutos++;
+                    break;
+
+                case 2:
+                    consultar_produto(produtos, totalProdutos);
+                    break;
+
+                case 3:
+                    atualiza_produto(produtos, totalProdutos);
+                    break;
+                }
+
+            } while (opProduto != 4);
+
+            break;
+
+        case 3:
+
+            salvar_produto(produtos, totalProdutos);
+            printf("Saindo...\n");
+            break;
+
+        default:
+            printf("Opcao invalida!\n");
         }
 
-    }while(opProduto!=4);
+    } while (opcao != 3);
 
-    break;
-       case 3:
-            salvar_produto(produtos,total);
-            printf("saindo......");
-            break;
-    }
     return 0;
 }
