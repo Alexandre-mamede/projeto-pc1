@@ -4,29 +4,6 @@
 
 #define MAX_PRODUTOS 100
 
-typedef struct{
-	char codigo_barras[13];
-	char nome_produto[101];
-	int tipo_produto;
-	int perecivel;
-	char data_fabricacao[11];
-	float volume_unidade;
-	int quantidade_itens;
-	float valor_unitario;
-	char data_validade[11];
-}produto;
-
-typedef struct{
-    char nome[51];
-    char cep[10];
-    char endereco[61];
-    char telefone[12];
-    float capacidade_max;       //em metros cúbicos
-    float capacidade_atual;
-    produto produtos[MAX_PRODUTOS];
-    int qtd_produtos;
-}Deposito;
-
 int validar_cep(char cep[]){
     if (strlen(cep) != 9)
         return 0;
